@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Marked Vars</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/4.0.0/github-markdown.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/prism-themes@1.5.0/themes/prism-vsc-dark-plus.css"
+    />
+    <style>
+      .container {
+        width: 50%;
+        height: 100vh;
+        margin: 0 auto;
+      }
+      #markdown h1 {
+        position: relative;
+        display: flex;
+        align-items: center;
+      }
+      #markdown h1 > a {
+        text-decoration: none;
+        display: none;
+      }
+      #markdown h1:hover > a {
+        display: inline-block;
+        position: absolute;
+        left: 0;
+        top: 0;
+        transform: translateX(-100%);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="markdown-body" id="markdown"></div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/components/prism-bash.min.js"></script>
+    <script src="../dist/markedVars.umd.min.js"></script>
+
+    <script>
+      const renderer = {
+        heading(text, level) {
+          const escapedText = text.toLowerCase().replace(/[^\w]+/g, '-')
+          return `<h${level} id="${escapedText}" >
+                  <a class="header-link" href="#${escapedText}">#</a>
+                  <span id="heading-text"> ${text}</span>
+                </h${level}>
+                `
+        },
+        code(code, lang) {
+          code = this.options.highlight(code, lang)
+          if (!lang) {
+            return `<pre><code>${code}</code></pre>`
+          }
+          const langClass = 'language-' + lang
+          return `<pre class="${langClass}"><code class="${langClass}">${code}</code></pre>`
+        },
+      }
+      markedVars.setOptions({
+        highlight: function (code, lang) {
+          if (Prism.languages[lang]) {
+            return Prism.highlight(code, Prism.languages[lang], lang)
+          } else {
+            return code
+          }
+        },
+      })
+
+      markedVars.use({ renderer })
+      ;(async () => {
+        const res = await fetch('example.md')
+        const result = await res.text()
+        const compiled = markedVars(result)
+        document.getElementById('markdown').innerHTML = compiled.html
+      })()
+
+      const varsTOMd = markedVars.convertToMarkdown(
+        {
+          title: 'Hello world',
+          asd: 12312312321,
+          js: 'Script',
+        },
+        '# Hello world',
+      )
+      console.log(varsTOMd)
+      console.log(markedVars(varsTOMd))
+    </script>
+  </body>
+</html>
