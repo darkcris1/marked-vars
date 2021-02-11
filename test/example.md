@@ -1,8 +1,11 @@
 ---vars
 
 title: "This is an example",
+num: 123_123_123
 
 ---
+
+## @(title) @(num) -> This is Variable
 
 # Documentation
 

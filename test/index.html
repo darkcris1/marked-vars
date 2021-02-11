@@ -18,16 +18,16 @@
         height: 100vh;
         margin: 0 auto;
       }
-      #markdown h1 {
+      #markdown .markdown-header {
         position: relative;
         display: flex;
         align-items: center;
       }
-      #markdown h1 > a {
+      #markdown .markdown-header > a {
         text-decoration: none;
         display: none;
       }
-      #markdown h1:hover > a {
+      #markdown .markdown-header:hover > a {
         display: inline-block;
         position: absolute;
         left: 0;
@@ -40,6 +40,7 @@
     <div class="container">
       <div class="markdown-body" id="markdown"></div>
     </div>
+    <script src="https://unpkg.com/calerts"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/prism.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/components/prism-bash.min.js"></script>
     <script src="../dist/markedVars.umd.min.js"></script>
@@ -48,11 +49,11 @@
       const renderer = {
         heading(text, level) {
           const escapedText = text.toLowerCase().replace(/[^\w]+/g, '-')
-          return `<h${level} id="${escapedText}" >
-                  <a class="header-link" href="#${escapedText}">#</a>
-                  <span id="heading-text"> ${text}</span>
-                </h${level}>
-                `
+          return `<h${level} id="${escapedText}" class="markdown-header">
+                        <a class="header-link" href="#${escapedText}">#</a>
+                        <span id="heading-text"> ${text}</span>
+                      </h${level}>
+                      `
         },
         code(code, lang) {
           code = this.options.highlight(code, lang)
@@ -74,12 +75,6 @@
       })
 
       markedVars.use({ renderer })
-      ;(async () => {
-        const res = await fetch('example.md')
-        const result = await res.text()
-        const compiled = markedVars(result)
-        document.getElementById('markdown').innerHTML = compiled.html
-      })()
 
       const varsTOMd = markedVars.convertToMarkdown(
         {
@@ -89,8 +84,27 @@
         },
         '# Hello world',
       )
-      console.log(varsTOMd)
-      console.log(markedVars(varsTOMd))
+      const expectedValue = `---vars
+  "title": "Hello world",
+  "asd": 12312312321,
+  "js": "Script"
+---
+# Hello world`
+      const isExpected = varsTOMd === expectedValue
+      ;(async () => {
+        try {
+          const res = await fetch('example.md')
+          const result = await res.text()
+          const compiled = markedVars(result)
+          document.getElementById('markdown').innerHTML = compiled.html
+
+          if (!isExpected) throw new Error('Not Expected')
+
+          calert('Test Successful', '', 'success')
+        } catch (error) {
+          calert('Test Error', '', 'error')
+        }
+      })()
     </script>
   </body>
 </html>
