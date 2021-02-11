@@ -1,6 +1,6 @@
 {
   "name": "marked-vars",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "a marked compiler with accessible variables",
   "main": "dist/markedVars.umd.min.js",
   "types": "index.d.ts",
