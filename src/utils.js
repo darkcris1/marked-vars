@@ -8,10 +8,14 @@ export function converToObject(str) {
 export function convertToMarkdown(vars, md, delims) {
   delims = delims || ['---vars', '---']
 
-  // Convert the variables into markedVars variables
-  const variables = JSON.stringify(vars, null, 2)
-    .replace(/^{/, delims[0])
-    .replace(/}$/, delims[1])
+  try {
+    const variables = JSON.stringify(vars, null, 2)
+      .replace(/^{/, delims[0])
+      .replace(/}$/, delims[1])
 
-  return `${variables}\n${md.trim()}`
+    return `${variables}\n${md.trim()}`
+  } catch (error) {
+    throw new Error('The variables must be a valid javascript object')
+  }
+  // Convert the variables into markedVars variables
 }

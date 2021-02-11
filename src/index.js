@@ -18,13 +18,13 @@ function markedVars(value, options) {
   const mdWithoudVars = value.replace(vars[0], '').trim()
 
   // replace the variables into variables value
-  const compiledMd = Object.entries(mdVars).reduce((acc, [key, value]) => {
+  const compiledVarsMd = Object.entries(mdVars).reduce((acc, [key, value]) => {
     return acc.replace(RegExp(`@\\(${key}\\)`, 'g'), value)
   }, mdWithoudVars)
 
   return {
     vars: mdVars,
-    html: marked(compiledMd, options),
+    html: marked(compiledVarsMd, options),
   }
 }
 
