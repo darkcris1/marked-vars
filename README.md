@@ -44,8 +44,9 @@ The date is @(date) -> Date Today
 My name is @(name) -> "Cris"
 My age is @(age) -> 7
 ```
+
 > You need to put the variables at the **very top** of the file
-To Access the variables you need to warap it on **@(variable-name)** as you can see on the example
+> To Access the variables you need to warap it on **@(variable-name)** as you can see on the example
 
 ```javascript
 import markedVars from 'marked-vars'
@@ -76,11 +77,11 @@ markedVars(markdown, { delims: ['---', '---'] })
 
 ## Converting to marked vars
 
-markedVars.convertToMarkdown(**variables**, \***\*markdown**, delims\*\*)
+markedVars.convertToMarkdown(**variables**, **markdown**, **delims**)
 
 variables: **object**
 
-arkdown: **string**
+markdown: **string**
 
 delims?: **[string,string]**
 
