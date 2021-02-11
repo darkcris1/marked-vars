@@ -32,9 +32,10 @@ export default (commandLineArgs) => {
         resolve(), // teach Rollup how to find external modules
         commonjs(), // so Rollup can convert external modules to an ES module
 
-        babel({
-          exclude: ['node_modules/**'],
-        }),
+        isProduction &&
+          babel({
+            exclude: ['node_modules/**'],
+          }),
         isProduction &&
           terser({
             output: {
